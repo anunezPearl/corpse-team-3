@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emoji Translator</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 60px auto; text-align: center; }
+    input { font-size: 1.2rem; padding: 8px; width: 250px; }
+    button { font-size: 1.2rem; padding: 8px 16px; }
+  </style>
+</head>
+<body>
+  <h1>Emoji Translator</h1>
+  <p>Type something to translate into emoji.</p>
+  <input id="textInput" type="text" placeholder="Type here" />
+  <button onclick="translate()">Translate</button>
+  <div id="output" style="font-size: 2rem; margin-top: 20px;"></div>
+
+  <script>
+    function translate() {
+      const val = document.getElementById('textInput').value;
+      document.getElementById('output').innerText = val;
+      // Nothing here yet — build me! Could map common words to emoji (dog -> 🐶, happy -> 😊).
+    }
+  </script>
+</body>
+</html>
