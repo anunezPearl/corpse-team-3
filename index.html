@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Emoji Translator</title>
   <style>
     body { font-family: sans-serif; max-width: 500px; margin: 60px auto; text-align: center; }
@@ -12,34 +13,44 @@
   <h1>Emoji Translator</h1>
   <p>Type something to translate into emoji.</p>
   <input id="textInput" type="text" placeholder="Type here" />
-  <button onclick="translate()">Translate</button>
+  <button onclick="translateText()">Translate</button>
   <div id="output" style="font-size: 2rem; margin-top: 20px;"></div>
 
   <script>
+    // The translator deliberately uses nature and flag emojis only.
     const EMOJI_MAP = {
-      dog: '🐶', cat: '🐱', happy: '😊', sad: '😢', love: '❤️', food: '🍔',
-      pizza: '🍕', sun: '☀️', moon: '🌙', star: '⭐', fire: '🔥', water: '💧',
-      run: '🏃', walk: '🚶', music: '🎵', dance: '💃', book: '📚', phone: '📱',
-      computer: '💻', money: '💰', time: '⏰', sleep: '😴', work: '💼',
-      play: '🎮', game: '🎮', car: '🚗', house: '🏠', tree: '🌳', flower: '🌸',
-      rain: '🌧️', snow: '❄️', hot: '🥵', cold: '🥶', good: '👍', bad: '👎',
-      yes: '✅', no: '❌', hello: '👋', bye: '👋', birthday: '🎂', party: '🎉',
-      beer: '🍺', coffee: '☕', friend: '🧑‍🤝‍🧑'
+      tree: '🌳', forest: '🌲', flower: '🌸', rose: '🌹', leaf: '🍃',
+      plant: '🌱', seed: '🌰', grass: '🌿', sun: '☀️', moon: '🌙',
+      star: '⭐', sky: '🌌', cloud: '☁️', rain: '🌧️', snow: '❄️',
+      wind: '🌬️', water: '💧', ocean: '🌊', wave: '🌊', fire: '🔥',
+      mountain: '⛰️', volcano: '🌋', desert: '🏜️', island: '🏝️',
+      beach: '🏖️', earth: '🌍', world: '🌎', globe: '🌐',
+      dog: '🐶', cat: '🐱', bird: '🐦', fish: '🐟', whale: '🐋',
+      dolphin: '🐬', butterfly: '🦋', bee: '🐝', bug: '🐛', frog: '🐸',
+      turtle: '🐢', snake: '🐍', rabbit: '🐇', fox: '🦊', bear: '🐻',
+      lion: '🦁', tiger: '🐯', panda: '🐼', elephant: '🐘', monkey: '🐒',
+      japan: '🇯🇵', usa: '🇺🇸', america: '🇺🇸', canada: '🇨🇦', mexico: '🇲🇽',
+      brazil: '🇧🇷', uk: '🇬🇧', england: '🇬🇧', france: '🇫🇷', germany: '🇩🇪',
+      italy: '🇮🇹', spain: '🇪🇸', india: '🇮🇳', china: '🇨🇳', australia: '🇦🇺'
     };
 
-    const WRONG_EMOJI = '🤔';
-    const EXCLAMATION_EMOJI = '❗';
-    const CENSORED_EMOJI = '🤬';
+    const WRONG_EMOJI = '🌱';
+    const EXCLAMATION_EMOJI = '🌩️';
+    const CENSORED_EMOJI = '🌵';
     const RUDE_WORDS = [
       'stupid', 'idiot', 'dumb', 'hate', 'sucks', 'terrible', 'awful',
       'shut up', 'wtf', 'damn', 'hell', 'crap', 'garbage', 'useless',
       'worthless', 'pathetic'
     ];
-    const FALLBACK_EMOJI = ['✨', '🔸', '🔹', '🌀', '💬', '🔺', '🔻', '⚙️'];
+    const FALLBACK_EMOJI = ['🌿', '🍀', '🌾', '🌴', '🌺', '🪻', '🌻', '🏳️'];
 
     function isRude(text) {
       const lower = text.toLowerCase();
-      return RUDE_WORDS.some(w => lower.includes(w)) || /!!!|[A-Z]{5,}/.test(text);
+      const hasRudeWord = RUDE_WORDS.some(w => {
+        if (w.includes(' ')) return lower.includes(w);
+        return new RegExp('\\b' + w + '\\b').test(lower);
+      });
+      return hasRudeWord || /!!!|[A-Z]{5,}/.test(text);
     }
 
     function fallbackEmoji(word) {
@@ -48,7 +59,7 @@
       return FALLBACK_EMOJI[hash % FALLBACK_EMOJI.length];
     }
 
-    function translate() {
+    function translateText() {
       const raw = document.getElementById('textInput').value;
       const output = document.getElementById('output');
       const trimmed = raw.trim();
