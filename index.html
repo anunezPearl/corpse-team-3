@@ -16,10 +16,84 @@
   <div id="output" style="font-size: 2rem; margin-top: 20px;"></div>
 
   <script>
+    const EMOJI_MAP = {
+      dog: '🐶', cat: '🐱', happy: '😊', sad: '😢', love: '❤️', food: '🍔',
+      pizza: '🍕', sun: '☀️', moon: '🌙', star: '⭐', fire: '🔥', water: '💧',
+      run: '🏃', walk: '🚶', music: '🎵', dance: '💃', book: '📚', phone: '📱',
+      computer: '💻', money: '💰', time: '⏰', sleep: '😴', work: '💼',
+      play: '🎮', game: '🎮', car: '🚗', house: '🏠', tree: '🌳', flower: '🌸',
+      rain: '🌧️', snow: '❄️', hot: '🥵', cold: '🥶', good: '👍', bad: '👎',
+      yes: '✅', no: '❌', hello: '👋', bye: '👋', birthday: '🎂', party: '🎉',
+      beer: '🍺', coffee: '☕', friend: '🧑‍🤝‍🧑'
+    };
+
+    const WRONG_EMOJI = '🤔';
+    const EXCLAMATION_EMOJI = '❗';
+    const CENSORED_EMOJI = '🤬';
+    const RUDE_WORDS = [
+      'stupid', 'idiot', 'dumb', 'hate', 'sucks', 'terrible', 'awful',
+      'shut up', 'wtf', 'damn', 'hell', 'crap', 'garbage', 'useless',
+      'worthless', 'pathetic'
+    ];
+    const FALLBACK_EMOJI = ['✨', '🔸', '🔹', '🌀', '💬', '🔺', '🔻', '⚙️'];
+
+    function isRude(text) {
+      const lower = text.toLowerCase();
+      return RUDE_WORDS.some(w => lower.includes(w)) || /!!!|[A-Z]{5,}/.test(text);
+    }
+
+    function fallbackEmoji(word) {
+      let hash = 0;
+      for (const ch of word) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+      return FALLBACK_EMOJI[hash % FALLBACK_EMOJI.length];
+    }
+
     function translate() {
-      const val = document.getElementById('textInput').value;
-      document.getElementById('output').innerText = val;
-      // Nothing here yet — build me! Could map common words to emoji (dog -> 🐶, happy -> 😊).
+      const raw = document.getElementById('textInput').value;
+      const output = document.getElementById('output');
+      const trimmed = raw.trim();
+
+      if (!trimmed) {
+        output.innerText = '';
+        return;
+      }
+
+      if (isRude(trimmed)) {
+        let result = '';
+        for (let i = 0; i < 5; i++) result += EXCLAMATION_EMOJI + CENSORED_EMOJI;
+        output.innerText = result;
+        return;
+      }
+
+      if (!/^please\b/i.test(trimmed)) {
+        output.innerText = WRONG_EMOJI;
+        return;
+      }
+
+      const wordsText = trimmed.replace(/^please\b/i, '').trim();
+      const words = wordsText.split(/\s+/).filter(Boolean);
+
+      const emojis = [];
+      let wrongCount = 0;
+
+      function nextEmoji(word) {
+        const position = emojis.length + 1;
+        if (position % 3 === 0 && wrongCount < 3) {
+          wrongCount++;
+          return WRONG_EMOJI;
+        }
+        const clean = word.replace(/[^a-zA-Z]/g, '').toLowerCase();
+        return EMOJI_MAP[clean] || fallbackEmoji(clean || `pad${position}`);
+      }
+
+      for (let i = 0; i < words.length && emojis.length < 9; i++) {
+        emojis.push(nextEmoji(words[i]));
+      }
+      while (emojis.length < 3) {
+        emojis.push(nextEmoji(`pad${emojis.length}`));
+      }
+
+      output.innerText = emojis.join(' ');
     }
   </script>
 </body>
