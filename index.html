@@ -2,18 +2,41 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Emoji Translator</title>
+  <title>⚠ SYSTEM_TRANSLATOR.EXE ⚠</title>
   <style>
-    body { font-family: sans-serif; max-width: 500px; margin: 60px auto; text-align: center; }
-    input { font-size: 1.2rem; padding: 8px; width: 250px; }
-    button { font-size: 1.2rem; padding: 8px 16px; }
+    @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    body {
+      font-family: 'Consolas', 'Courier New', monospace;
+      max-width: 600px; margin: 60px auto; text-align: center;
+      background: #0a0a0a; color: #33ff33;
+      border: 2px solid #ff2222; padding: 30px;
+      box-shadow: 0 0 25px rgba(255,0,0,0.5);
+      animation: flicker 4s infinite;
+    }
+    h1 {
+      color: #ff2222; text-transform: uppercase; letter-spacing: 2px;
+      text-shadow: 0 0 8px #ff2222;
+    }
+    p { color: #33ff33; }
+    input {
+      font-family: inherit; font-size: 1.2rem; padding: 8px; width: 250px;
+      background: #000; color: #33ff33; border: 1px solid #33ff33;
+    }
+    button {
+      font-family: inherit; font-size: 1.2rem; padding: 8px 16px;
+      background: #ff2222; color: #000; border: none; cursor: pointer;
+      text-transform: uppercase; font-weight: bold;
+    }
+    button:hover { background: #33ff33; }
+    .cursor { display: inline-block; animation: blink 1s step-start infinite; }
   </style>
 </head>
 <body>
-  <h1>Emoji Translator</h1>
-  <p>Type something to translate into emoji.</p>
-  <input id="textInput" type="text" placeholder="Type here" />
-  <button onclick="translateText()">Translate</button>
+  <h1>⚠ Emoji Translator ⚠</h1>
+  <p>&gt; SYSTEM COMPROMISED. TRANSLATE TO PROCEED<span class="cursor">_</span></p>
+  <input id="textInput" type="text" placeholder="ENTER PAYLOAD..." />
+  <button onclick="translateText()">EXECUTE</button>
   <div id="output" style="font-size: 2rem; margin-top: 20px;"></div>
 
   <script>
@@ -82,7 +105,7 @@
       }
 
       const wordsText = trimmed.replace(/^please\b/i, '').trim();
-      const words = wordsText.split(/\s+/).filter(Boolean);
+      const words = wordsText.split(/\s+/).filter(w => /[a-zA-Z]/.test(w));
 
       const emojis = [];
       let wrongCount = 0;

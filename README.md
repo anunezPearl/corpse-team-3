@@ -13,3 +13,11 @@ Translation logic is in. Rules:
   (shown as 🌱), capped at 3 wrong emojis per translation.
 - The emoji library is restricted to nature-related and flag emojis, including
   fallbacks and special responses.
+
+## Round 3 (team-1)
+- Fixed a bug where punctuation-only tokens (e.g. a lone comma) were counted
+  as words, throwing off the "every 3rd emoji is wrong" position and word
+  count.
+- Reskinned the UI with a cosmetic "malware terminal" theme (glitchy red/green
+  hacker aesthetic) for the exquisite corpse workshop. Purely visual — the
+  translation logic is unchanged.
